@@ -51,4 +51,52 @@ $(function(){
            }
         }
     });
+
+    // 2. 进行登录请求
+    //    通过 ajax 进行登录请求
+
+    // 表单校验插件有一个特点, 在表单提交的时候进行校验
+    // 如果校验成功, 继续提交, 需要阻止这次默认的提交, 通过 ajax 进行请求提交
+    // 如果校验失败, 阻止默认的提交
+    $("#form").on("success.form.bv",function(e){
+        //阻止默认的表单提交
+        e.preventDefault();
+        console.log($("#form").serialize());
+
+        //通过ajax进行登录请求
+        $.ajax({
+            type:"post",
+            url:"/employee/employeeLogin",
+            dataType:"json",
+            data:$("#form").serialize(),
+            success:function(info){
+                //http://localhost:3000/back/login.html
+                console.log(info);//{success: true}
+
+                if(info.success){
+                    // alert( "登录成功" );
+                    //页面跳转
+                    location.href="index.html";
+                }
+                if(info.error === 1000){
+                    // alert( "用户名不存在" )
+                   $("#form").data("bootstrapValidator").updateStatus("username","INVALID","callback");
+                }
+
+                if(info.error === 1001){
+                    // alert( "密码错误" );
+                    // updateStatus
+                    // 参数1: 字段名称
+                    // 参数2: 校验状态
+                    // 参数3: 校验规则, 可以设置提示文本
+                    $("#form").data("bootstrapValidator").updateStatus("password","INVALID","callback");
+                }
+            }
+        });
+    });
+    //3.重置功能实现
+    $('[type="reset"]').click(function(){
+        //除了重置文本，还要重置校验状态
+        $("#form").data("bootstrapValidator").resetForm();
+    });
 });
