@@ -22,7 +22,7 @@ $(function(){
 
                 //分页初始化
                 $('#paginator').bootstrapPaginator({
-                    //版本号
+                    //bootstrap版本号,默认是2
                     bootstrapMajorVersion:3,
                     //当前页
                     currentPage:info.page,
